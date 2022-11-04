@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "0n+0SWYW2ZrxSzUx6B7VkeUsNCipp5RDq6O2PF4pU5uZqPIu7xXx+CKYYzNs4y+q6X/Mo+HXbGzV5jHGpvF4fA==",
+  "success": true,
+  "projectFilePath": "/Users/richarddonovan/Documents/workspaces/ebss-document-api/Beis.Ebss.Document.Api/Beis.Ebss.Document.Api.csproj",
+  "expectedPackageFiles": [
+    "/Users/richarddonovan/.nuget/packages/microsoft.aspnetcore.mvc.versioning/5.0.0/microsoft.aspnetcore.mvc.versioning.5.0.0.nupkg.sha512",
+    "/Users/richarddonovan/.nuget/packages/microsoft.extensions.apidescription.server/3.0.0/microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "/Users/richarddonovan/.nuget/packages/microsoft.openapi/1.2.3/microsoft.openapi.1.2.3.nupkg.sha512",
+    "/Users/richarddonovan/.nuget/packages/swashbuckle.aspnetcore/6.2.3/swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
+    "/Users/richarddonovan/.nuget/packages/swashbuckle.aspnetcore.swagger/6.2.3/swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
+    "/Users/richarddonovan/.nuget/packages/swashbuckle.aspnetcore.swaggergen/6.2.3/swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",
+    "/Users/richarddonovan/.nuget/packages/swashbuckle.aspnetcore.swaggerui/6.2.3/swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512"
+  ],
+  "logs": []
+}

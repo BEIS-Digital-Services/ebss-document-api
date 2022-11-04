@@ -1,0 +1,20 @@
+trigger:
+- main
+
+resources:
+  repositories:
+    - repository: template
+      type: git
+      name: DevOps
+      ref: releases/1.0.0
+
+pool:
+  vmImage: Windows-latest
+
+variables:
+  buildConfiguration: 'Release'
+
+extends:
+  template: sync-public-repo.yml@template
+  parameters:
+    gitUrl: 'githuburl'
