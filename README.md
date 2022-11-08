@@ -46,6 +46,8 @@ Hit "Modify" to bind a local port to a docker port
 ![Edit-launch-config-6.png](./.readme/Edit-launch-config-6.png)
 -
 
+*You may need to choose a different port to this.*
+
 ![Edit-launch-config-7.png](./.readme/Edit-launch-config-7.png)
 -
 
