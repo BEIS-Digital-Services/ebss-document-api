@@ -1,20 +1,55 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
-
+This api is responsible for handling of documents, for example, storage, virus checking, status...
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+1. Clone this repo
+2. To get up and running you'll need a few things installed on your machine.
+   1. [Dotnet 6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+   2. [ASP.NET Core](https://github.com/aspnet/Home)
+   3. [Docker](https://www.docker.com/products/docker-desktop/)
+   4. List anything else here
+   
+3. You can develop this project using a number of IDE's. Here a few options:
+   1. [Visual Studio](https://visualstudio.microsoft.com/vs/)
+   2. [Visual Studio Code](https://code.visualstudio.com/download)
+   3. [Rider](https://www.jetbrains.com/rider/)
 
 # Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+1. Build the whole solution and if you run into problems, make sure that the relevent packages have been restored.
+2. You can run the app with the default configuration and it should launch a swagger page where you can execute the api.
+   If you want to run the api using docker, you'll need to create a new configuration:
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+## Create docker launch configuration (Images should render locally)
+Find the Configuration dropdown menu towards the top right and hit edit configuration.
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+
+![Edit-launch-config-1.png](./.readme/Edit-launch-config-1.png)
+
+Then hit the plus sign to add a new configuration.
+
+
+![Edit-launch-config-2.png](./.readme/Edit-launch-config-2.png)
+ 
+Choose Dockerfile
+
+![Edit-launch-config-3.png](./.readme/Edit-launch-config-3.png)
+   
+File in the name and image tag (must be lowercase) and make sure the dockerfile is pointing to the correct file (root of solution)
+
+![Edit-launch-config-4.png](./.readme/Edit-launch-config-4.png)
+
+Hit "Modify" to bind a local port to a docker port
+
+
+![Edit-launch-config-5.png](./.readme/Edit-launch-config-5.png)
+-
+
+![Edit-launch-config-6.png](./.readme/Edit-launch-config-6.png)
+-
+
+![Edit-launch-config-7.png](./.readme/Edit-launch-config-7.png)
+-
+
+In this instance port 8006 on your computer is bound to port 80 in docker.
+
+If you launch the app using this new configuration you should be able to view the app at:
+http://localhost:8006/swagger/index.html
