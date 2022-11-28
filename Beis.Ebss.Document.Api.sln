@@ -2,6 +2,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beis.Ebss.Document.Api", "Beis.Ebss.Document.Api\Beis.Ebss.Document.Api.csproj", "{E5102403-74B8-4E80-833C-08A2BA27899A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{18E60533-86A3-41B0-AFC8-11204B395571}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beis.Ebss.Document.Api.Benchmark", "Beis.Ebss.Document.Api.Benchmark\Beis.Ebss.Document.Api.Benchmark.csproj", "{3BDBD4C0-00D9-41AD-BD73-9921B287B566}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +19,9 @@ Global
 		{E5102403-74B8-4E80-833C-08A2BA27899A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5102403-74B8-4E80-833C-08A2BA27899A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5102403-74B8-4E80-833C-08A2BA27899A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BDBD4C0-00D9-41AD-BD73-9921B287B566}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BDBD4C0-00D9-41AD-BD73-9921B287B566}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BDBD4C0-00D9-41AD-BD73-9921B287B566}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BDBD4C0-00D9-41AD-BD73-9921B287B566}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

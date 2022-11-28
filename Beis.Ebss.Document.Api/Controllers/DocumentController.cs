@@ -14,45 +14,24 @@ namespace Beis.Ebss.Document.Api.Controllers;
 [Route("api/v{version:apiVersion}/[controller]")]
 public class DocumentController : ControllerBase
 {
-    private readonly ILogger<DocumentController> _logger;
-    private readonly DocumentOptions _documentOptions;
-    private readonly ClamAVOptions _ClamAvOptions;
-
-    // For more file signatures, see the File Signatures Database (https://www.filesignatures.net/)
-    // and the official specifications for the file types you wish to add.
-    private readonly Dictionary<string, List<byte[]>> _fileSignature = new Dictionary<string, List<byte[]>>
-    {
-        { ".png", new List<byte[]> { new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A } } },
-        { ".jpeg", new List<byte[]>
-            {
-                new byte[] { 0xFF, 0xD8, 0xFF, 0xE0 },
-                new byte[] { 0xFF, 0xD8, 0xFF, 0xE2 },
-                new byte[] { 0xFF, 0xD8, 0xFF, 0xE3 },
-            }
-        },
-        { ".jpg", new List<byte[]>
-            {
-                new byte[] { 0xFF, 0xD8, 0xFF, 0xE0 },
-                new byte[] { 0xFF, 0xD8, 0xFF, 0xE1 },
-                new byte[] { 0xFF, 0xD8, 0xFF, 0xE8 },
-            }
-        }
-    };
+    private readonly ILogger<DocumentController> logger;
+    private readonly DocumentOptions documentOptions;
+    private readonly ClamAVOptions clamAvOptions;
 
     public DocumentController(
         ILogger<DocumentController> logger, 
         IOptions<DocumentOptions> documentOptions,
-        IOptions<ClamAVOptions> clamAVOptions)
+        IOptions<ClamAVOptions> clamAvOptions)
     {
-        this._logger = logger;
-        this._documentOptions = documentOptions.Value;
-        this._ClamAvOptions = clamAVOptions.Value;
+        this.logger = logger;
+        this.documentOptions = documentOptions.Value;
+        this.clamAvOptions = clamAvOptions.Value;
     }
 
     [HttpGet(Name = "Get")]
     public async Task<IEnumerable<string>> Get()
     {
-        this._logger.LogInformation("DocumentController:Get");
+        this.logger.LogInformation("DocumentController:Get");
         return await Task.FromResult(Enumerable.Range(1, 5).Select(index => new string($"Documents {index}")).ToArray());
     }
 
@@ -62,14 +41,14 @@ public class DocumentController : ControllerBase
     {
         if (!this.IsMultipartContentType(Request.ContentType))
         {
-            this._logger.LogError("File:The request couldn't be processed");
+            this.logger.LogError("File:The request couldn't be processed");
             // Log error
     
             return BadRequest(ModelState);
         }
     
         var boundary = this.GetBoundary(
-            MediaTypeHeaderValue.Parse(Request.ContentType),this._documentOptions.MaxFileSize);
+            MediaTypeHeaderValue.Parse(Request.ContentType),this.documentOptions.MaxFileSize);
         var reader = new MultipartReader(boundary, HttpContext.Request.Body);
         var section = await reader.ReadNextSectionAsync();
     
@@ -87,7 +66,7 @@ public class DocumentController : ControllerBase
                 // and returns the model error.
                 if (!this.HasFileContentDisposition(contentDisposition))
                 {
-                    this._logger.LogError("File: The request couldn't be processed.");
+                    this.logger.LogError("File: The request couldn't be processed.");
                     // Log error
     
                     return BadRequest(ModelState);
@@ -110,7 +89,7 @@ public class DocumentController : ControllerBase
                     // this sample.
     
                     var streamedFileContent = await this.ProcessStreamedFile(
-                        section, contentDisposition, this._documentOptions.AcceptableFileExtensions, this._documentOptions.MaxFileSize);
+                        section, contentDisposition, this.documentOptions.AcceptableFileExtensions, this.documentOptions.MaxFileSize);
     
                     if (streamedFileContent.Length == 0)
                     {
@@ -121,41 +100,41 @@ public class DocumentController : ControllerBase
                     {  
                         // scan for virus...
                         
-                        this._logger.LogInformation("ClamAV scan begin for file {0}", trustedFileNameForFileStorage);  
-                        var clam = new ClamClient(this._ClamAvOptions.Url, Convert.ToInt32(this._ClamAvOptions.Port));  
+                        this.logger.LogInformation("ClamAV scan begin for file {0}", trustedFileNameForFileStorage);  
+                        var clam = new ClamClient(this.clamAvOptions.Url, Convert.ToInt32(this.clamAvOptions.Port));  
                         var scanResult = await clam.SendAndScanFileAsync(streamedFileContent);    
                         
                         switch (scanResult.Result)  
                         {  
                             case ClamScanResults.Clean:  
-                                this._logger.LogInformation("The file is clean! ScanResult:{1}", scanResult.RawResult);  
+                                this.logger.LogInformation("The file is clean! ScanResult:{1}", scanResult.RawResult);  
                                 break;  
                             case ClamScanResults.VirusDetected:  
-                                this._logger.LogError("Virus Found! Virus name: {1}", scanResult.InfectedFiles.FirstOrDefault().VirusName);  
+                                this.logger.LogError("Virus Found! Virus name: {1}", scanResult.InfectedFiles.FirstOrDefault().VirusName);  
                                 break;  
                             case ClamScanResults.Error:  
-                                this._logger.LogError("An error occured while scaning the file! ScanResult: {1}", scanResult.RawResult);  
+                                this.logger.LogError("An error occured while scaning the file! ScanResult: {1}", scanResult.RawResult);  
                                 break;  
                             case ClamScanResults.Unknown:  
-                                this._logger.LogError("Unknown scan result while scaning the file! ScanResult: {0}", scanResult.RawResult);  
+                                this.logger.LogError("Unknown scan result while scaning the file! ScanResult: {0}", scanResult.RawResult);  
                                 break;  
                         }  
                     }  
                     catch (Exception ex)  
                     {  
   
-                        this._logger.LogError("ClamAV Scan Exception: {0}", ex.ToString());  
+                        this.logger.LogError("ClamAV Scan Exception: {0}", ex.ToString());  
                     }
 
                     using (var targetStream = System.IO.File.Create(
-                               Path.Combine(this._documentOptions.LocalStoragePath, trustedFileNameForFileStorage)))
+                               Path.Combine(this.documentOptions.LocalStoragePath, trustedFileNameForFileStorage)))
                     {
                         await targetStream.WriteAsync(streamedFileContent);
     
-                        _logger.LogInformation(
+                        logger.LogInformation(
                             "Uploaded file '{TrustedFileNameForDisplay}' saved to " +
                             "'{TargetFilePath}' as {TrustedFileNameForFileStorage}",
-                            trustedFileNameForDisplay, this._documentOptions.LocalStoragePath,
+                            trustedFileNameForDisplay, this.documentOptions.LocalStoragePath,
                             trustedFileNameForFileStorage);
                     }
                 }
@@ -180,19 +159,19 @@ public class DocumentController : ControllerBase
                 // Check if the file is empty or exceeds the size limit.
                 if (memoryStream.Length == 0)
                 {
-                    this._logger.LogError("File: The file is empty.");
+                    this.logger.LogError("File: The file is empty");
                 }
                 else if (memoryStream.Length > sizeLimit)
                 {
                     var megabyteSizeLimit = sizeLimit / 1048576;
-                    this._logger.LogError($"File: The file exceeds {megabyteSizeLimit:N1} MB.");
+                    this.logger.LogError("File: The file exceeds {MegabyteSizeLimit} MB", megabyteSizeLimit);
                 }
-                else if (!IsValidFileExtensionAndSignature(
+                else if (!IsValidFileExtension(
                              contentDisposition.FileName.Value, memoryStream, 
                              permittedExtensions))
                 {
-                    this._logger.LogError("File: The file type isn't permitted or the file's " +
-                                          "signature doesn't match the file's extension.");
+                    this.logger.LogError("File: The file type isn't permitted or the file's " +
+                                          "signature doesn't match the file's extension");
                 }
                 else
                 {
@@ -213,7 +192,7 @@ public class DocumentController : ControllerBase
     }
 
 
-    private bool IsValidFileExtensionAndSignature(string fileName, Stream data, string[] permittedExtensions)
+    private bool IsValidFileExtension(string fileName, Stream data, string[] permittedExtensions)
     {
         if (string.IsNullOrEmpty(fileName) || data == null || data.Length == 0)
         {
@@ -222,39 +201,7 @@ public class DocumentController : ControllerBase
 
         var ext = Path.GetExtension(fileName).ToLowerInvariant();
 
-        if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
-        {
-            return false;
-        }
-
-        data.Position = 0;
-
-        using (var reader = new BinaryReader(data))
-        {
-            // Uncomment the following code block if you must permit
-            // files whose signature isn't provided in the _fileSignature
-            // dictionary. We recommend that you add file signatures
-            // for files (when possible) for all file types you intend
-            // to allow on the system and perform the file signature
-            // check.
-            /*
-            if (!_fileSignature.ContainsKey(ext))
-            {
-                return true;
-            }
-            */
-
-            // File signature check
-            // --------------------
-            // With the file signatures provided in the _fileSignature
-            // dictionary, the following code tests the input content's
-            // file signature.
-            var signatures = _fileSignature[ext];
-            var headerBytes = reader.ReadBytes(signatures.Max(m => m.Length));
-
-            return signatures.Any(signature =>
-                headerBytes.Take(signature.Length).SequenceEqual(signature));
-        }
+        return !string.IsNullOrEmpty(ext) && permittedExtensions.Contains(ext);
     }
 
     // Content-Type: multipart/form-data; boundary="----WebKitFormBoundarymx2fSWqWSd0OxQqq"

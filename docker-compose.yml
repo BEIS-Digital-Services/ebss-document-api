@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  clam:
+    image: mkodockx/docker-clamav:alpine
+    container_name: clamav
+    restart: unless-stopped
+    ports:
+      - "3310:3310"
+    volumes:
+      - clam:/var/lib/clamav
+    healthcheck:
+      test: ["CMD", "./check.sh"]
+      interval: 60s
+      retries: 3
+      start_period: 120s
+volumes:
+  clam:
